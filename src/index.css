@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 220 15% 10%;
+
+    --panel: 0 0% 95%;
+    --border: 220 13% 85%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 9% 46%;
+
+    --cyan: 184 90% 45%;
+    --cyan-subtle: 184 90% 45% / 0.15;
+    
+    --grid-line: 220 13% 88%;
+  }
+
+  .dark {
+    --background: 220 10% 6%;
+    --foreground: 0 0% 95%;
+
+    --panel: 220 10% 9%;
+    --border: 220 10% 16%;
+    --muted: 220 8% 12%;
+    --muted-foreground: 220 6% 60%;
+
+    --cyan: 181 95% 52%;
+    --cyan-subtle: 181 95% 52% / 0.15;
+
+    --grid-line: 220 10% 12%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased transition-colors duration-700 ease-in-out;
+    font-feature-settings: "ss01", "cv11";
+    min-width: 320px;
+    text-rendering: geometricPrecision;
+  }
+
+  ::selection {
+    background: hsl(var(--cyan));
+    color: hsl(var(--background));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.02em;
+  }
+
+  .display {
+    font-family: "Space Grotesk", "Manrope", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+  }
+
+  .section-shell {
+    margin-inline: auto;
+    max-width: 1440px;
+    padding-inline: 1.25rem;
+  }
+
+  .technical-field {
+    background-image:
+      linear-gradient(to right, hsl(var(--grid-line)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--grid-line)) 1px, transparent 1px);
+    background-position: top center;
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+    opacity: 0.8;
+    pointer-events: none;
+    transition: background-image 0.7s ease-in-out;
+  }
+}
+
+@media (min-width: 768px) {
+  .section-shell {
+    padding-inline: 2.25rem;
+  }
+}
+

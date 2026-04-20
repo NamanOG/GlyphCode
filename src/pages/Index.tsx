@@ -1,0 +1,753 @@
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type Variants,
+} from "framer-motion";
+import logo from "@/assets/glyphcode-logo.png";
+import heroBlueprint from "@/assets/hero-blueprint.jpg";
+import workCompute from "@/assets/work-compute.jpg";
+import workEden from "@/assets/work-eden.jpg";
+import workRaipur from "@/assets/work-raipur.jpg";
+
+// Sharper technical curves
+const easeOut = [0.22, 1, 0.36, 1] as const;
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: easeOut } },
+};
+
+const heroItem: Variants = {
+  hidden: { opacity: 0, y: 30, clipPath: "inset(0 0 100% 0)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    clipPath: "inset(0 0 0% 0)",
+    transition: { duration: 0.95, ease: easeOut },
+  },
+};
+
+const clipLeft: Variants = {
+  hidden: { opacity: 0, clipPath: "inset(0 100% 0 0)", x: -16 },
+  show: {
+    opacity: 1,
+    clipPath: "inset(0 0% 0 0)",
+    x: 0,
+    transition: { duration: 0.85, ease: easeOut },
+  },
+};
+
+const stepReveal: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: easeOut } },
+};
+
+type Project = {
+  category: string;
+  description: string;
+  href: string;
+  image: string;
+  index: string;
+  name: string;
+  stack: string;
+  year: string;
+};
+
+const navLinks = [
+  { href: "#work", label: "Work" },
+  { href: "#capabilities", label: "Capabilities" },
+  { href: "#process", label: "Process" },
+  { href: "#about", label: "About" },
+  { href: "#contact", label: "Contact" },
+];
+
+const projects: Project[] = [
+  {
+    name: "Raipur.life",
+    category: "City Discovery / Full-Stack",
+    description:
+      "A local discovery platform for restaurants, events, places, and city life in one product.",
+    image: workRaipur,
+    href: "https://raipur.life",
+    index: "01",
+    stack: "Next.js / Supabase / Maps",
+    year: "2026",
+  },
+  {
+    name: "Eden Nori",
+    category: "Premium Frontend / UI Engineering",
+    description: "A design-led frontend execution project showcasing high-end web aesthetics.",
+    image: workEden,
+    href: "https://eden-nori.vercel.app",
+    index: "02",
+    stack: "React / Motion / Interface",
+    year: "2025",
+  },
+  {
+    name: "Compute Compile",
+    category: "B2B IT / Business Website",
+    description: "Digital presence and sales platform for an established IT services company.",
+    image: workCompute,
+    href: "https://computecompile.com",
+    index: "03",
+    stack: "Next.js / CMS / SEO",
+    year: "2024",
+  },
+];
+
+const capabilities = [
+  {
+    id: "SYS.01",
+    title: "Frontend Systems",
+    description: "Component architecture, interaction design, and motion-led UI for serious products.",
+  },
+  {
+    id: "SYS.02",
+    title: "Full-Stack Development",
+    description: "End-to-end product engineering across modern web stacks and robust backend APIs.",
+  },
+  {
+    id: "SYS.03",
+    title: "Brand Websites",
+    description: "Custom digital presence work for companies that need craft, clarity, and speed.",
+  },
+  {
+    id: "SYS.04",
+    title: "Rapid Prototyping",
+    description: "Focused sprints that move from rough idea to usable product without template debt.",
+  },
+];
+
+const processSteps = [
+  { number: "01", title: "Discover", text: "Goals, audience, constraints, and risk mapped into a usable brief." },
+  { number: "02", title: "Design", text: "Typography, layout, interaction model, and system rules shaped early." },
+  { number: "03", title: "Build", text: "Production implementation in typed, maintainable React and backend code." },
+  { number: "04", title: "Refine", text: "Motion, accessibility, speed, edge cases, and responsive polish tightened." },
+  { number: "05", title: "Ship", text: "Deployment, QA, handoff, and iteration without abandoning the product." },
+];
+
+const marqueeTop = [
+  "NEXT.JS", "TYPESCRIPT", "SUPABASE", "FRAMER MOTION", "TAILWIND CSS", "REACT", "REST APIs", "FULL-STACK"
+];
+
+const marqueeBottom = [
+  "COMPONENT ARCHITECTURE", "MOTION-LED UI", "DESIGN SYSTEMS", "RAPID PROTOTYPING", "BRAND WEBSITES", "END-TO-END ENGINEERING"
+];
+
+function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
+  return <img src={logo} alt="GlyphCode" className={`${className} object-contain`} />;
+}
+
+// UNIQUE THEME TOGGLE
+function ThemeToggle() {
+  const [isDark, setIsDark] = useState(true);
+  
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  return (
+    <button 
+      onClick={toggleTheme} 
+      className="group relative flex h-8 w-8 items-center justify-center border border-border bg-panel focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan"
+      aria-label="Toggle structural theme"
+    >
+      <motion.div 
+        className="grid grid-cols-2 gap-[2px]" 
+        animate={{ rotate: isDark ? 0 : 90, scale: isDark ? 1 : 0.9 }}
+        transition={{ duration: 0.65, ease: easeOut }}
+      >
+        <motion.div animate={{ backgroundColor: isDark ? 'hsl(var(--foreground))' : 'transparent' }} className="h-2 w-2 border border-foreground" />
+        <motion.div animate={{ backgroundColor: isDark ? 'transparent' : 'hsl(var(--foreground))' }} className="h-2 w-2 border border-foreground" />
+        <motion.div animate={{ backgroundColor: isDark ? 'transparent' : 'hsl(var(--cyan))' }} className="h-2 w-2 border border-cyan" />
+        <motion.div animate={{ backgroundColor: isDark ? 'hsl(var(--foreground))' : 'transparent' }} className="h-2 w-2 border border-foreground" />
+      </motion.div>
+    </button>
+  );
+}
+
+function Reveal({
+  amount = 0.3,
+  children,
+  className,
+  variants = fadeUp,
+}: {
+  amount?: number;
+  children: React.ReactNode;
+  className?: string;
+  variants?: Variants;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { amount, once: true });
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      ref={ref}
+      animate={reduceMotion ? undefined : inView ? "show" : "hidden"}
+      className={className}
+      initial={reduceMotion ? false : "hidden"}
+      variants={reduceMotion ? undefined : variants}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function Stagger({
+  amount = 0.2,
+  children,
+  className,
+  delay = 0,
+  stagger = 0.1,
+}: {
+  amount?: number;
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  stagger?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { amount, once: true });
+  const reduceMotion = useReducedMotion();
+  const variants: Variants = {
+    hidden: {},
+    show: { transition: { delayChildren: delay, staggerChildren: stagger } },
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      animate={reduceMotion ? undefined : inView ? "show" : "hidden"}
+      className={className}
+      initial={reduceMotion ? false : "hidden"}
+      variants={reduceMotion ? undefined : variants}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function ClipHeading({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLHeadingElement>(null);
+  const inView = useInView(ref, { amount: 0.5, once: true });
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      ref={ref}
+      animate={
+        reduceMotion
+          ? undefined
+          : inView
+            ? { clipPath: "inset(0% 0 0 0)", y: 0 }
+            : { clipPath: "inset(100% 0 0 0)", y: 20 }
+      }
+      className={className}
+      initial={reduceMotion ? false : { clipPath: "inset(100% 0 0 0)", y: 20 }}
+      transition={{ duration: 0.9, ease: easeOut }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 15);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div
+        className={`grid grid-cols-[1fr_auto] items-center border-b border-border transition-[background-color,backdrop-filter] duration-500 md:grid-cols-[1fr_auto_1fr] px-5 py-4 md:px-9 ${
+          scrolled
+            ? "bg-background/90 backdrop-blur-md shadow-sm"
+            : "bg-background/80 backdrop-blur-sm"
+        }`}
+      >
+        <a href="#" className="flex items-center gap-3" aria-label="GlyphCode home">
+          <LogoMark className="h-7 w-7" />
+          <span className="mono text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-foreground">
+            GlyphCode<span className="text-cyan">.</span>
+          </span>
+        </a>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          {navLinks.map((link) => (
+            <a
+              className="mono text-[0.68rem] uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 hover:text-cyan focus-visible:outline-none"
+              href={link.href}
+              key={link.href}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="justify-self-end flex items-center gap-4">
+          <ThemeToggle />
+          <a
+            className="group hidden border border-border px-4 py-2 mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-foreground transition-colors duration-300 hover:border-cyan hover:text-cyan focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan md:flex items-center gap-2 bg-panel"
+            href="#contact"
+          >
+            Start <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </a>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const yShift = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+
+  return (
+    <section ref={sectionRef} className="relative min-h-[100svh] overflow-hidden border-b border-border pt-[4.8rem]">
+      <div className="absolute inset-0 technical-field z-0" />
+
+      <div className="relative z-10 grid min-h-[calc(100svh-4.8rem)] grid-cols-12 gap-x-6 px-5 pb-0 md:px-9">
+        <motion.div
+          animate="show"
+          className="col-span-12 flex flex-col justify-center pb-12 pt-6 md:col-span-7 lg:pb-16"
+          initial={reduceMotion ? false : "hidden"}
+          variants={reduceMotion ? undefined : { hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
+        >
+          <motion.p className="mono text-[0.72rem] uppercase tracking-[0.24em] text-cyan" variants={heroItem}>
+            Digital studio / Full-stack execution / Global Base
+          </motion.p>
+
+          <motion.h1
+            className="display mt-8 max-w-[10ch] text-[clamp(4.5rem,14vw,14rem)] uppercase leading-[0.8] text-foreground"
+            variants={heroItem}
+          >
+            Glyph
+            <br />
+            Code<span className="text-cyan text-[clamp(2.5rem,8vw,10rem)] leading-[0] align-baseline">.</span>
+          </motion.h1>
+
+          <motion.div className="mt-12 grid max-w-2xl grid-cols-1 gap-6 border-t border-border pt-8 md:grid-cols-1" variants={heroItem}>
+            <p className="text-xl leading-snug text-muted-foreground md:text-2xl">
+              We build digital products, websites, and full-stack systems with the detail of a studio and the discipline of an engineering team.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
+              <a
+                className="group border border-border bg-panel px-6 py-4 mono text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-foreground transition-all duration-300 hover:border-cyan hover:bg-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan flex items-center gap-2"
+                href="#contact"
+              >
+                Initiate Project <span className="text-cyan transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+              <a
+                className="group px-6 py-4 mono text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground transition-colors duration-300 hover:text-foreground flex items-center gap-2"
+                href="#work"
+              >
+                View Dossier <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.aside
+          animate="show"
+          className="col-span-12 border-t border-border md:col-span-5 md:border-l md:border-t-0 bg-background/50 backdrop-blur-sm flex flex-col justify-end"
+          initial={reduceMotion ? false : "hidden"}
+          variants={reduceMotion ? undefined : { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.4 } } }}
+        >
+          <div className="flex flex-col h-full justify-between p-6 md:p-8">
+            <motion.div className="mono grid grid-cols-[auto_1fr_auto] items-center gap-4 text-[0.66rem] uppercase tracking-[0.2em] text-muted-foreground mt-4 md:mt-0" variants={heroItem}>
+              <span>Pipeline</span>
+              <span className="h-px bg-border flex-1" />
+              <span>EST.2024</span>
+            </motion.div>
+            
+            <div className="mt-8 md:mt-auto">
+              <motion.div className="relative aspect-[4/3] w-full overflow-hidden border border-border bg-panel" variants={heroItem}>
+                <motion.img
+                  alt="GlyphCode architectural interface blueprint"
+                  className="h-full w-full object-cover mix-blend-luminosity opacity-80 transition-opacity duration-700 hover:opacity-100 hover:mix-blend-normal"
+                  src={heroBlueprint}
+                  style={{ scale: reduceMotion ? 1 : imageScale, y: reduceMotion ? 0 : yShift }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 p-5 backdrop-blur-sm">
+                  <div className="mono flex items-center justify-between text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+                    <span>FIG.01</span>
+                    <span className="text-cyan border border-cyan/30 px-2 py-0.5">Systems</span>
+                  </div>
+                  <p className="mt-4 text-sm leading-tight text-foreground">
+                    No templates. No generated sameness. Just sharp code and intentional interface work.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.aside>
+      </div>
+
+      <Marquee />
+    </section>
+  );
+}
+
+function MarqueeRow({ items, reverse = false }: { items: string[]; reverse?: boolean }) {
+  const reduceMotion = useReducedMotion();
+  const content = (
+    <div className="flex shrink-0 items-center gap-12 pr-12 mono text-[0.72rem] uppercase tracking-[0.24em] text-muted-foreground">
+      {items.map((item) => (
+        <span className="flex items-center gap-12" key={item}>
+          <span>{item}</span>
+          <span className="text-cyan">/</span>
+        </span>
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="overflow-hidden py-3">
+      <div className={`flex w-max ${reduceMotion ? "" : reverse ? "animate-marquee-reverse" : "animate-marquee"}`}>
+        {content}
+        {content}
+        {content}
+      </div>
+    </div>
+  );
+}
+
+function Marquee() {
+  return (
+    <div className="border-t border-border bg-background z-10 relative">
+      <MarqueeRow items={marqueeTop} />
+      <div className="border-t border-border" />
+      <MarqueeRow items={marqueeBottom} reverse />
+    </div>
+  );
+}
+
+function SectionHeader({
+  eyebrow,
+  index,
+  subtitle,
+  title,
+}: {
+  eyebrow: string;
+  index: string;
+  subtitle?: string;
+  title: string;
+}) {
+  return (
+    <div className="grid grid-cols-12 gap-8 border-b border-border pb-10">
+      <Reveal className="col-span-12 md:col-span-4 lg:col-span-3 pt-2" variants={clipLeft}>
+        <div className="mono flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.24em] text-cyan">
+          <span className="h-[2px] w-4 bg-cyan block" /> {index}
+        </div>
+        <div className="mono mt-4 text-[0.7rem] uppercase tracking-[0.24em] text-muted-foreground">{eyebrow}</div>
+      </Reveal>
+      <div className="col-span-12 md:col-span-8 lg:col-span-9">
+        <ClipHeading>
+          <h2 className="display max-w-4xl text-[clamp(2.8rem,6.5vw,7rem)] uppercase leading-[0.88] text-foreground">
+            {title}
+          </h2>
+        </ClipHeading>
+        {subtitle ? (
+          <Reveal variants={fadeUp}>
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">{subtitle}</p>
+          </Reveal>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function ProjectPreview({ project, wide = false }: { project: Project; wide?: boolean }) {
+  return (
+    <motion.a
+      className={`group block relative border border-border bg-background transition-colors duration-500 hover:border-cyan focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan ${
+        wide ? "lg:grid lg:grid-cols-12" : "flex flex-col h-full"
+      }`}
+      href={project.href}
+      rel="noreferrer"
+      target="_blank"
+      variants={fadeUp}
+    >
+      {/* Structural Corner Marks */}
+      <span className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-transparent transition-colors group-hover:border-cyan z-20" />
+      <span className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-transparent transition-colors group-hover:border-cyan z-20" />
+      <span className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-transparent transition-colors group-hover:border-cyan z-20" />
+      <span className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-transparent transition-colors group-hover:border-cyan z-20" />
+
+      <div className={`relative overflow-hidden bg-panel ${wide ? "aspect-[16/9] lg:col-span-7 lg:aspect-auto" : "aspect-[4/3]"}`}>
+        <img
+          alt={project.name}
+          className="h-full w-full object-cover mix-blend-luminosity opacity-80"
+          loading="lazy"
+          src={project.image}
+        />
+        {/* Animated Inner Frame */}
+        <div className="absolute inset-4 border border-foreground/10 transition-transform duration-700 ease-[0.22,1,0.36,1] group-hover:scale-[0.96] group-hover:border-cyan/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
+      </div>
+      
+      <div className={`flex flex-col justify-between p-6 md:p-8 bg-background relative z-10 transition-colors duration-500 ${wide ? "lg:col-span-5 lg:border-l border-border" : "flex-1 border-t border-border"}`}>
+        <div>
+          <div className="mono flex items-center justify-between text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground overflow-hidden">
+            <span className="truncate pr-4">{project.category}</span>
+            <span className="text-cyan shrink-0 transition-transform duration-500 group-hover:-translate-y-1">/{project.index}</span>
+          </div>
+          <h3 className="display mt-8 text-[clamp(2rem,4vw,4.5rem)] uppercase leading-[0.9] text-foreground transition-colors duration-500 group-hover:text-cyan">
+            {project.name}
+          </h3>
+        </div>
+        <div className="mt-10">
+          <p className="text-base leading-relaxed text-muted-foreground line-clamp-3">{project.description}</p>
+          <div className="mt-8 flex items-end justify-between gap-4 border-t border-border pt-5">
+            <div className="mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+              <div className="mb-1 text-foreground/80">{project.stack}</div>
+              <div>{project.year}</div>
+            </div>
+            <div className="relative overflow-hidden h-8 w-8 flex items-center justify-end">
+              <span className="display absolute text-3xl leading-none text-cyan transition-transform duration-500 transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100">
+                →
+              </span>
+              <span className="display absolute text-3xl leading-none text-foreground transition-transform duration-500 group-hover:translate-x-full group-hover:opacity-0">
+                →
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.a>
+  );
+}
+
+function SelectedWork() {
+  return (
+    <section className="section-shell py-24 md:py-32 lg:py-40" id="work">
+      <SectionHeader
+        eyebrow="Selected Work"
+        index="INDEX 24_26"
+        subtitle="A tight sample of shipped products and brand systems. The structure is intentionally precise because the work is un-templated."
+        title="Shipped work, framed as modules."
+      />
+
+      <Stagger className="mt-16 grid grid-cols-12 gap-6" stagger={0.12}>
+        <ProjectPreview project={projects[0]} wide />
+        <div className="col-span-12 grid gap-6 lg:col-span-12 lg:grid-cols-2">
+          <ProjectPreview project={projects[1]} />
+          <ProjectPreview project={projects[2]} />
+        </div>
+      </Stagger>
+    </section>
+  );
+}
+
+function Capabilities() {
+  return (
+    <section className="section-shell py-20 md:py-28 lg:py-36" id="capabilities">
+      <SectionHeader
+        eyebrow="Capabilities"
+        index="SYSTEMS"
+        subtitle="Organized rows. Each service is treated as an engineering system with a visible purpose."
+        title="What we engineer."
+      />
+
+      <div className="mt-16 border-t border-border">
+        {capabilities.map((capability, i) => (
+          <Reveal key={capability.id} variants={clipLeft} delay={i * 0.1}>
+            <div className="group relative grid grid-cols-12 gap-6 border-b border-border py-10 md:py-12 px-2 transition-all duration-500 ease-out hover:bg-panel">
+              {/* Vertical technical border indicator */}
+              <span className="absolute inset-y-0 left-0 w-[3px] bg-cyan origin-bottom scale-y-0 transition-transform duration-500 ease-out group-hover:scale-y-100" />
+              
+              <div className="col-span-12 md:col-span-3 pl-4">
+                <span className="mono text-[0.72rem] uppercase tracking-[0.24em] text-muted-foreground transition-colors duration-500 group-hover:text-cyan">
+                  {capability.id}
+                </span>
+              </div>
+              <div className="col-span-12 grid gap-5 pl-4 md:pl-0 md:col-span-9 md:grid-cols-[1fr_1.2fr]">
+                <h3 className="display text-3xl uppercase leading-[1] text-foreground transition-transform duration-500 ease-out group-hover:translate-x-2 md:text-5xl">
+                  {capability.title}
+                </h3>
+                <p className="max-w-xl leading-relaxed text-muted-foreground md:pl-6 border-l border-transparent transition-colors duration-500 group-hover:border-border">
+                  {capability.description}
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section className="section-shell py-24 md:py-36" id="process">
+      <SectionHeader
+        eyebrow="Process"
+        index="SEQUENCE"
+        subtitle="A direct delivery rhythm: fewer ceremonies, stronger decisions, and intense polish prior to launch."
+        title="Brief to deployment."
+      />
+
+      <div className="mt-20 border border-border bg-panel grid grid-cols-1 md:grid-cols-5">
+        {processSteps.map((step, index) => (
+          <Reveal
+            key={step.number}
+            className={`group relative min-h-[22rem] flex flex-col justify-end p-6 md:p-8 overflow-hidden transition-colors duration-500 hover:bg-background ${
+              index !== processSteps.length - 1 ? "border-b border-border md:border-b-0 md:border-r" : ""
+            }`}
+            variants={stepReveal}
+          >
+            {/* Massive background number */}
+            <div className="display absolute -top-4 -right-2 text-[clamp(8rem,14vw,12rem)] leading-none text-foreground/5 z-0 transition-colors duration-700 group-hover:text-cyan/10 select-none">
+              {step.number}
+            </div>
+            
+            <div className="relative z-10">
+              <h3 className="display text-2xl uppercase tracking-tight text-foreground flex items-center gap-3">
+                <span className="h-1 w-1 bg-cyan inline-block rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                {step.title}
+              </h3>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{step.text}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Philosophy() {
+  return (
+    <section className="border-y border-border bg-panel py-24 md:py-40" id="about">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-12 gap-8 px-5 md:px-9">
+        <Reveal className="col-span-12 md:col-span-3" variants={clipLeft}>
+          <div className="mono text-[0.7rem] uppercase tracking-[0.24em] text-cyan">PHILOSOPHY</div>
+          <div className="mt-6 h-px w-16 bg-foreground/20" />
+        </Reveal>
+        <Reveal className="col-span-12 md:col-span-9" variants={fadeUp}>
+          <p className="display max-w-5xl text-[clamp(2.5rem,6vw,7rem)] uppercase leading-[0.9] text-foreground">
+            Craft is the product. The code, the rhythm, the interface, the system.
+          </p>
+          <div className="mt-12 max-w-2xl text-xl leading-relaxed text-muted-foreground border-l border-cyan pl-6">
+            <p>
+              GlyphCode builds things that feel completely intended, not generated. Every technical decision has to pull its weight in the architecture.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  const contacts = [
+    { href: "mailto:hi@glyphcode.dev", label: "Email", value: "hi@glyphcode.dev" },
+    { href: "https://github.com/NamanOG", label: "GitHub", value: "@NamanOG" },
+    { href: "https://namanbagdiya.tech", label: "Portfolio", value: "namanbagdiya.tech" },
+  ];
+
+  return (
+    <section className="section-shell py-24 md:py-40" id="contact">
+      <SectionHeader eyebrow="Contact" index="INITIATE" title="Establish connection." />
+
+      <div className="mt-16 grid grid-cols-12 gap-10">
+        <Reveal className="col-span-12 md:col-span-7 flex flex-col justify-center" variants={fadeUp}>
+          <p className="max-w-2xl text-2xl leading-relaxed text-muted-foreground md:text-3xl">
+            Have a product, brand, or system in mind? Draft the brief. We initiate response sequences within{" "}
+            <span className="text-foreground border-b border-cyan">24 hours</span>.
+          </p>
+          <div className="mt-10">
+            <a
+              className="group inline-flex items-center gap-4 bg-foreground px-8 py-5 mono text-[0.78rem] font-bold uppercase tracking-[0.18em] text-background transition-all duration-300 hover:bg-cyan hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              href="mailto:hi@glyphcode.dev"
+            >
+              Transmit Signal 
+              <span className="transition-transform duration-300 group-hover:translate-x-2">→</span>
+            </a>
+          </div>
+        </Reveal>
+
+        <Stagger className="col-span-12 border-t border-border mt-8 md:mt-0 md:col-span-5 md:pl-10 md:border-t-0 md:border-l" stagger={0.1}>
+          {contacts.map((contact) => (
+            <motion.a
+              className="group flex flex-col justify-center gap-2 border-b border-border py-8 transition-colors duration-300 hover:border-cyan"
+              href={contact.href}
+              key={contact.label}
+              rel="noreferrer"
+              target={contact.href.startsWith("http") ? "_blank" : undefined}
+              variants={clipLeft}
+            >
+              <div className="mono flex justify-between items-center text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground transition-colors duration-300 group-hover:text-cyan">
+                <span>{contact.label}</span>
+                <span className="display text-2xl leading-none transition-transform duration-300 group-hover:translate-x-2 group-hover:text-cyan opacity-0 group-hover:opacity-100 -translate-x-4">→</span>
+              </div>
+              <span className="display block text-xl md:text-2xl text-foreground transition-colors duration-300">{contact.value}</span>
+            </motion.a>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t border-border bg-panel">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-10 px-5 py-12 md:flex-row md:items-end md:justify-between md:px-9 lg:py-16">
+        <div>
+          <a className="inline-flex items-center gap-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan" href="#">
+            <LogoMark className="h-8 w-8" />
+            <span className="display text-3xl uppercase leading-none tracking-tight">
+              GlyphCode<span className="text-cyan">.</span>
+            </span>
+          </a>
+          <p className="mt-5 max-w-sm text-sm text-muted-foreground leading-relaxed">Precision digital studio. Engineering products, architectures, and interfaces without templates.</p>
+        </div>
+        <div className="mono flex flex-wrap gap-x-8 gap-y-4 text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+          <a className="transition-colors hover:text-foreground focus-visible:outline-none" href="#work">Work</a>
+          <a className="transition-colors hover:text-foreground focus-visible:outline-none" href="#capabilities">Capabilities</a>
+          <a className="transition-colors hover:text-foreground focus-visible:outline-none" href="#contact">Contact</a>
+          <span className="text-foreground/40">©2026 GLYPHCODE.DEV</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default function Index() {
+  return (
+    <main className="min-h-screen bg-background text-foreground overflow-hidden">
+      <Navbar />
+      <Hero />
+      <SelectedWork />
+      <Capabilities />
+      <Process />
+      <Philosophy />
+      <Contact />
+      <Footer />
+    </main>
+  );
+}
