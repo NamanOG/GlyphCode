@@ -31,8 +31,8 @@ export default {
         panel: "hsl(var(--panel))",
       },
       keyframes: {
-        marquee: { "0%": { transform: "translateX(0)" }, "100%": { transform: "translateX(-33.333%)" } },
-        "marquee-reverse": { "0%": { transform: "translateX(-33.333%)" }, "100%": { transform: "translateX(0)" } },
+        marquee: { "0%": { transform: "translateX(0)" }, "100%": { transform: "translateX(-50%)" } },
+        "marquee-reverse": { "0%": { transform: "translateX(-50%)" }, "100%": { transform: "translateX(0)" } },
       },
       animation: {
         marquee: "marquee 60s linear infinite",
