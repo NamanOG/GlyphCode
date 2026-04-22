@@ -4,33 +4,39 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 220 15% 10%;
+    --background: 230 22% 6%;
+    --foreground: 220 22% 95%;
 
-    --panel: 0 0% 95%;
-    --border: 220 13% 85%;
-    --muted: 220 14% 94%;
-    --muted-foreground: 220 9% 46%;
+    --panel: 228 20% 10%;
+    --border: 228 18% 20%;
+    --muted: 226 18% 13%;
+    --muted-foreground: 220 14% 68%;
 
-    --cyan: 184 90% 45%;
-    --cyan-subtle: 184 90% 45% / 0.15;
+    --cyan: 188 95% 62%;
+    --cyan-subtle: 188 95% 62% / 0.18;
     
-    --grid-line: 220 13% 88%;
+    --grid-line: 228 14% 16%;
+    --horizon-core: 24 98% 58%;
+    --horizon-accent: 195 96% 66%;
+    --space-glow: 266 72% 44%;
   }
 
   .dark {
-    --background: 220 10% 6%;
-    --foreground: 0 0% 95%;
+    --background: 230 22% 6%;
+    --foreground: 220 22% 95%;
 
-    --panel: 220 10% 9%;
-    --border: 220 10% 16%;
-    --muted: 220 8% 12%;
-    --muted-foreground: 220 6% 60%;
+    --panel: 228 20% 10%;
+    --border: 228 18% 20%;
+    --muted: 226 18% 13%;
+    --muted-foreground: 220 14% 68%;
 
-    --cyan: 181 95% 52%;
-    --cyan-subtle: 181 95% 52% / 0.15;
+    --cyan: 188 95% 62%;
+    --cyan-subtle: 188 95% 62% / 0.18;
 
-    --grid-line: 220 10% 12%;
+    --grid-line: 228 14% 16%;
+    --horizon-core: 24 98% 58%;
+    --horizon-accent: 195 96% 66%;
+    --space-glow: 266 72% 44%;
   }
 
   * {
@@ -93,10 +99,57 @@
       linear-gradient(to bottom, hsl(var(--grid-line)) 1px, transparent 1px);
     background-position: top center;
     background-size: 72px 72px;
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
     opacity: 0.8;
     pointer-events: none;
     transition: background-image 0.7s ease-in-out;
+  }
+
+  .cosmic-stars {
+    background-image:
+      radial-gradient(circle at 12% 18%, hsl(var(--foreground) / 0.36) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 80% 24%, hsl(var(--foreground) / 0.26) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 54% 80%, hsl(var(--foreground) / 0.22) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 30% 68%, hsl(var(--foreground) / 0.2) 0 1px, transparent 1.5px);
+    background-size: 180px 180px, 240px 240px, 210px 210px, 260px 260px;
+    mix-blend-mode: screen;
+    opacity: 0.42;
+    pointer-events: none;
+  }
+
+  .event-horizon-core {
+    background:
+      radial-gradient(circle at center, transparent 0 12%, hsl(0 0% 2% / 0.96) 18%, hsl(0 0% 0%) 34%),
+      radial-gradient(circle at center, hsl(var(--horizon-core) / 0.38), transparent 66%);
+    filter: blur(0.3px) saturate(1.1);
+    pointer-events: none;
+  }
+
+  .event-horizon-ring {
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--horizon-accent) / 0.32);
+    box-shadow:
+      0 0 40px hsl(var(--horizon-core) / 0.2),
+      inset 0 0 26px hsl(var(--horizon-core) / 0.16);
+    background:
+      conic-gradient(
+        from 0deg,
+        hsl(var(--horizon-core) / 0.02) 0deg,
+        hsl(var(--horizon-core) / 0.48) 80deg,
+        hsl(var(--horizon-accent) / 0.42) 190deg,
+        hsl(var(--horizon-core) / 0.12) 290deg,
+        hsl(var(--horizon-core) / 0.02) 360deg
+      );
+    filter: blur(1px) saturate(1.25);
+    pointer-events: none;
+  }
+
+  .event-horizon-vignette {
+    background:
+      radial-gradient(circle at 58% 46%, transparent 0%, hsl(var(--space-glow) / 0.08) 38%, hsl(0 0% 0% / 0.72) 100%),
+      linear-gradient(to bottom, hsl(0 0% 0% / 0.2), hsl(0 0% 0% / 0.52));
+    pointer-events: none;
   }
 }
 

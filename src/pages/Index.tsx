@@ -3,13 +3,9 @@ import {
   motion,
   useInView,
   useReducedMotion,
-  useScroll,
-  useTransform,
-  type MotionStyle,
   type Variants,
 } from "framer-motion";
 import logo from "@/assets/glyphcode-logo.png";
-import heroBlueprint from "@/assets/hero-blueprint.jpg";
 import workCompute from "@/assets/work-compute.jpg";
 import workEden from "@/assets/work-eden.jpg";
 import workRaipur from "@/assets/work-raipur.jpg";
@@ -322,6 +318,33 @@ function ClipHeading({
   );
 }
 
+function EventHorizonBackdrop() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_64%_45%,hsl(var(--space-glow)/0.44),transparent_52%),radial-gradient(circle_at_22%_12%,hsl(var(--horizon-accent)/0.16),transparent_35%),linear-gradient(to_bottom,hsl(var(--background)/0.8),hsl(var(--background)/0.52)_44%,hsl(0_0%_0%/0.96))]" />
+      <div className="cosmic-stars absolute inset-0" />
+      <motion.div
+        animate={reduceMotion ? undefined : { rotate: 360 }}
+        className="event-horizon-ring absolute left-[66%] top-[47%] h-[26rem] w-[26rem] -translate-x-1/2 -translate-y-1/2 rounded-full md:h-[36rem] md:w-[36rem]"
+        initial={reduceMotion ? undefined : { rotate: 0 }}
+        transition={reduceMotion ? undefined : { duration: 36, ease: "linear", repeat: Infinity }}
+      />
+      <motion.div
+        animate={reduceMotion ? undefined : { rotate: -360, scale: [1, 1.02, 1] }}
+        className="event-horizon-ring absolute left-[66%] top-[47%] h-[18rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-80 md:h-[25rem] md:w-[44rem]"
+        initial={reduceMotion ? undefined : { rotate: 0 }}
+        transition={
+          reduceMotion ? undefined : { duration: 24, ease: "linear", repeat: Infinity, repeatType: "mirror" }
+        }
+      />
+      <div className="event-horizon-core absolute left-[66%] top-[47%] h-[11rem] w-[11rem] -translate-x-1/2 -translate-y-1/2 rounded-full md:h-[15rem] md:w-[15rem]" />
+      <div className="event-horizon-vignette absolute inset-0" />
+    </div>
+  );
+}
+
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
@@ -379,31 +402,19 @@ function Navbar() {
 function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const yShift = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
     <section
       ref={sectionRef}
       className="relative min-h-[100svh] overflow-hidden border-b border-border pt-[4.8rem]"
     >
-      <div
-        className="absolute inset-0 technical-field z-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+      <EventHorizonBackdrop />
+      <div className="absolute inset-0 technical-field z-0 opacity-15" />
 
       <div className="relative z-10 grid min-h-[calc(100svh-4.8rem)] grid-cols-12 gap-x-6 px-5 pb-0 md:px-9">
         <motion.div
           animate="show"
-          className="col-span-12 flex flex-col justify-center pb-12 pt-6 md:col-span-7 lg:pb-16"
+          className="col-span-12 flex flex-col justify-center pb-16 pt-6 md:col-span-8 lg:col-span-7 lg:pb-20"
           initial={reduceMotion ? false : "hidden"}
           variants={
             reduceMotion
@@ -419,7 +430,7 @@ function Hero() {
           </motion.p>
 
           <motion.h1
-            className="display mt-8 max-w-[10ch] text-[clamp(4.5rem,14vw,14rem)] uppercase leading-[0.8] tracking-[0.02em] text-foreground"
+            className="display mt-8 max-w-[10ch] text-[clamp(4.1rem,13vw,13rem)] uppercase leading-[0.8] tracking-[0.02em] text-foreground"
             variants={heroItem}
           >
             Glyph
@@ -431,16 +442,26 @@ function Hero() {
           </motion.h1>
 
           <motion.div
-            className="mt-12 grid max-w-2xl grid-cols-1 gap-6 border-t border-border pt-8"
+            className="mt-12 grid max-w-2xl grid-cols-1 gap-7 border-t border-border/60 pt-8"
             variants={heroItem}
           >
             <p className="text-xl leading-snug text-muted-foreground md:text-2xl">
               We build digital products, websites, and full-stack systems with the detail of a studio
               and the discipline of an engineering team.
             </p>
+            <div className="grid max-w-xl grid-cols-2 gap-3 md:grid-cols-4">
+              {["Framer Motion", "React + TS", "Supabase", "High Fidelity UI"].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-md border border-border/70 bg-background/35 px-3 py-2 text-center mono text-[0.58rem] uppercase tracking-[0.16em] text-muted-foreground backdrop-blur-md"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
             <div className="flex flex-wrap gap-4 pt-2">
               <a
-                className="group flex cursor-pointer select-none items-center gap-2 border border-border bg-panel px-6 py-4 mono text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-foreground transition-all duration-300 hover:border-cyan hover:bg-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan"
+                className="group flex cursor-pointer select-none items-center gap-2 border border-cyan/40 bg-cyan/10 px-6 py-4 mono text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-foreground transition-all duration-300 hover:border-cyan hover:bg-cyan/15 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan"
                 href="#contact"
               >
                 Initiate Project
@@ -458,52 +479,6 @@ function Hero() {
             </div>
           </motion.div>
         </motion.div>
-
-        <motion.aside
-          animate="show"
-          className="col-span-12 flex flex-col justify-end border-t border-border bg-background/50 backdrop-blur-sm md:col-span-5 md:border-l md:border-t-0"
-          initial={reduceMotion ? false : "hidden"}
-          variants={
-            reduceMotion
-              ? undefined
-              : { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.4 } } }
-          }
-        >
-          <div className="flex h-full flex-col justify-between p-6 md:p-8">
-            <motion.div
-              className="mono mt-4 grid grid-cols-[auto_1fr_auto] items-center gap-4 text-[0.66rem] uppercase tracking-[0.2em] text-muted-foreground md:mt-0"
-              variants={heroItem}
-            >
-              <span>Pipeline</span>
-              <span className="h-px flex-1 bg-border" />
-              <span>EST.2024</span>
-            </motion.div>
-
-            <div className="mt-8 md:mt-auto">
-              <motion.div
-                className="relative aspect-[16/10] w-full overflow-hidden border border-border bg-panel md:aspect-auto md:min-h-[320px]"
-                variants={heroItem}
-              >
-                <motion.img
-                  alt="GlyphCode architectural interface blueprint"
-                  className="h-full w-full object-cover mix-blend-luminosity opacity-80 transition-opacity duration-700 hover:opacity-100 hover:mix-blend-normal"
-                  src={heroBlueprint}
-                  style={{ scale: reduceMotion ? 1 : imageScale, y: reduceMotion ? 0 : yShift }}
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5 backdrop-blur-sm">
-                  <div className="mono flex items-center justify-between text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-                    <span>FIG.01</span>
-                    <span className="border border-cyan/30 px-2 py-0.5 text-cyan">Systems</span>
-                  </div>
-                  <p className="mt-4 text-sm leading-tight text-foreground">
-                    No templates. No generated sameness. Just sharp code and intentional interface work.
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </motion.aside>
       </div>
 
       <Marquee />
@@ -583,56 +558,48 @@ function SectionHeader({
 
 function ProjectCard({
   project,
-  cardClassName,
-  style,
 }: {
   project: Project;
-  cardClassName?: string;
-  style?: MotionStyle;
 }) {
   return (
     <motion.a
-      className={`group block border border-border bg-background transition-colors duration-500 hover:border-cyan focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan ${cardClassName ?? ""}`}
+      className="group relative block overflow-hidden rounded-2xl border border-border/80 bg-panel/70 shadow-[0_12px_50px_hsl(230_25%_2%/0.4)] backdrop-blur-md transition-all duration-400 hover:border-cyan/60 hover:shadow-[0_24px_60px_hsl(190_90%_55%/0.16)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan"
       href={project.href}
       rel="noreferrer"
       target="_blank"
       variants={fadeUp}
-      whileHover={{ scale: 1.01, transition: { duration: 0.3, ease: "easeOut" } }}
-      style={style}
+      whileHover={{ y: -10, scale: 1.01, transition: { duration: 0.28, ease: "easeOut" } }}
     >
-      <div className="relative overflow-hidden bg-panel aspect-[16/9]">
+      <div className="relative aspect-[16/10] overflow-hidden bg-background/30">
         <img
           alt={project.name}
-          className="h-full w-full object-cover mix-blend-luminosity opacity-80 transition-transform duration-700 group-hover:scale-105"
+          className="h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-110"
           loading="lazy"
           src={project.image}
         />
-        <div className="absolute inset-4 border border-foreground/10 transition-transform duration-700 ease-[0.22,1,0.36,1] group-hover:scale-[0.96] group-hover:border-cyan/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute right-4 top-4 rounded-full border border-cyan/40 bg-background/60 px-3 py-1 mono text-[0.62rem] uppercase tracking-[0.2em] text-cyan backdrop-blur-sm">
+          /{project.index}
+        </div>
       </div>
 
-      <div className="relative z-10 flex flex-col justify-between border-t border-border bg-background p-6 transition-colors duration-500 md:p-8">
+      <div className="relative z-10 flex flex-col gap-5 border-t border-border/70 bg-background/65 p-5 transition-colors duration-500 md:p-6">
         <div>
-          <div className="mono flex items-center justify-between overflow-hidden text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="truncate pr-4">{project.category}</span>
-            <span className="shrink-0 text-cyan transition-transform duration-500 group-hover:-translate-y-1">
-              /{project.index}
-            </span>
-          </div>
-          <h3 className="display mt-8 text-[clamp(2rem,4vw,4.5rem)] uppercase leading-[0.9] text-foreground transition-colors duration-500 group-hover:text-cyan">
+          <div className="mono text-[0.62rem] uppercase tracking-[0.2em] text-cyan/90">{project.category}</div>
+          <h3 className="display mt-3 text-[clamp(1.5rem,2.7vw,2.35rem)] uppercase leading-[0.95] text-foreground transition-colors duration-500 group-hover:text-cyan">
             {project.name}
           </h3>
         </div>
-        <div className="mt-10">
-          <p className="line-clamp-3 text-base leading-relaxed text-muted-foreground">
+        <div>
+          <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground md:text-base">
             {project.description}
           </p>
-          <div className="mt-8 flex items-end justify-between gap-4 border-t border-border pt-5">
-            <div className="mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="mt-6 flex items-end justify-between gap-4 border-t border-border/70 pt-4">
+            <div className="mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
               <div className="mb-1 text-foreground/80">{project.stack}</div>
               <div>{project.year}</div>
             </div>
-            <span className="display text-3xl leading-none text-foreground transition-transform duration-500 group-hover:translate-x-1 group-hover:text-cyan">
+            <span className="display text-2xl leading-none text-foreground transition-transform duration-500 group-hover:translate-x-1 group-hover:text-cyan">
               →
             </span>
           </div>
@@ -643,59 +610,27 @@ function ProjectCard({
 }
 
 function SelectedWork() {
-  const stackRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: stackRef,
-    offset: ["start start", "end end"],
-  });
-
-  const card1Y = useTransform(scrollYProgress, [0, 0.33], ["0%", "0%"]);
-  const card1Scale = useTransform(scrollYProgress, [0, 0.33, 0.66], [1, 0.95, 0.9]);
-  const card1Opacity = useTransform(scrollYProgress, [0.2, 0.4], [1, 0.6]);
-
-  const card2Y = useTransform(scrollYProgress, [0.1, 0.4], ["100%", "0%"]);
-  const card2Scale = useTransform(scrollYProgress, [0.33, 0.66], [1, 0.95]);
-  const card2Opacity = useTransform(scrollYProgress, [0.5, 0.7], [1, 0.6]);
-
-  const card3Y = useTransform(scrollYProgress, [0.45, 0.75], ["100%", "0%"]);
-  const card3Scale = useTransform(scrollYProgress, [0.66, 1], [1, 1]);
-
   return (
     <section className="section-shell pt-16 md:pt-24 lg:pt-28" id="work">
       <SectionHeader
         eyebrow="Selected Work"
         index="INDEX 24_26"
-        subtitle="A tight sample of shipped products and brand systems. The structure is intentionally precise because the work is un-templated."
-        title="Shipped work, framed as modules."
+        subtitle="A tighter showcase in compact floating cards. Hover to inspect details and open each project."
+        title="Selected builds."
       />
 
-      <Stagger className="mt-12 h-[300vh]" stagger={0.12}>
-        <div ref={stackRef} className="relative h-full">
-          <div className="sticky top-[calc(4.8rem+2rem)]">
-            <ProjectCard
-              project={projects[0]}
-              cardClassName="origin-top will-change-transform"
-              style={{ y: card1Y, scale: card1Scale, opacity: card1Opacity, transformOrigin: "top center", zIndex: 10 }}
-            />
+      <Stagger className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3" stagger={0.1}>
+        {projects.map((project) => (
+          <div key={project.name} className="h-full">
+            <ProjectCard project={project} />
           </div>
-
-          <div className="sticky top-[calc(4.8rem+2rem)]">
-            <ProjectCard
-              project={projects[1]}
-              cardClassName="origin-top will-change-transform"
-              style={{ y: card2Y, scale: card2Scale, opacity: card2Opacity, transformOrigin: "top center", zIndex: 20 }}
-            />
-          </div>
-
-          <div className="sticky top-[calc(4.8rem+2rem)]">
-            <ProjectCard
-              project={projects[2]}
-              cardClassName="origin-top will-change-transform"
-              style={{ y: card3Y, scale: card3Scale, transformOrigin: "top center", zIndex: 30 }}
-            />
-          </div>
-        </div>
+        ))}
       </Stagger>
+      <div className="mt-8 flex justify-center">
+        <div className="mono rounded-full border border-border/70 bg-panel/70 px-5 py-2 text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground">
+          Hover cards to levitate and explore
+        </div>
+      </div>
     </section>
   );
 }
@@ -904,7 +839,8 @@ function Footer() {
 
 export default function Index() {
   return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="relative isolate min-h-screen overflow-hidden bg-background text-foreground">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_70%_10%,hsl(var(--space-glow)/0.18),transparent_42%),radial-gradient(circle_at_20%_65%,hsl(var(--horizon-accent)/0.08),transparent_35%)]" />
       <Navbar />
       <Hero />
       <SelectedWork />
