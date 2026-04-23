@@ -1,7 +1,6 @@
 import { memo } from "react";
 
 function ShaderDividerComponent() {
-  // eslint-disable-next-line
   return (
     <div
       className="shader-divider border-y border-[#252c35]"

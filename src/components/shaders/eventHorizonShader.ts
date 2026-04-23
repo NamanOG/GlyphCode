@@ -17,8 +17,9 @@ void main() {
   vec2 uv = (gl_FragCoord.xy / u_resolution.xy) * 2.0 - 1.0;
   uv.x *= u_resolution.x / u_resolution.y;
 
-  vec2 targetCenter = vec2(0.3, -0.2);
-  vec2 center = mix(targetCenter, (u_mouse - 0.5) * 0.18 + targetCenter, 0.45);
+  // push the focal disk further to the right so it can act as a large background element
+  vec2 targetCenter = vec2(0.85, 0.0);
+  vec2 center = mix(targetCenter, (u_mouse - 0.5) * 0.12 + targetCenter, 0.25);
   vec2 p = uv - center;
 
   float r = length(p);
@@ -31,12 +32,13 @@ void main() {
   vec2 warped = p + normalize(p + 0.0001) * lens;
   float wr = length(warped);
 
-  float ring = smoothstep(0.38, 0.33, abs(wr - 0.355 - 0.012 * sin(spin * 3.0 + u_time * 0.8)));
+  // larger disk/ring so the shader fills more horizontal space
+  float ring = smoothstep(0.62, 0.48, abs(wr - 0.48 - 0.02 * sin(spin * 3.0 + u_time * 0.8)));
   float swirl = sin(spin * 8.0 - u_time * 1.5) * 0.5 + 0.5;
   float accretion = ring * (0.5 + swirl * 0.5) * pulse;
 
   float shadowCore = smoothstep(0.18, 0.0, r);
-  float halo = smoothstep(2.2, 0.1, r) * 0.35;
+  float halo = smoothstep(3.2, 0.1, r) * 0.45;
 
   vec3 deepBlue = vec3(0.01, 0.04, 0.09);
   vec3 cyan = vec3(0.0, 0.83, 1.0);

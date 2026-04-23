@@ -22,7 +22,6 @@ export default function ScrollProgressBar() {
 
   return (
     <>
-      {/* eslint-disable-next-line */}
       <div
         className="fixed top-0 left-0 h-[2px] z-[9999] bg-[#00D4FF] opacity-60 pointer-events-none"
         style={{ width: `${width}%` }}

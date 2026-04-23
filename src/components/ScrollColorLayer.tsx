@@ -1,68 +1,68 @@
 import { useEffect, useRef } from "react";
 
-function lerpColor(a: number[], b: number[], amount: number) { 
-  const ar = a[0], ag = a[1], ab = a[2], aa = a[3];
-  const br = b[0], bg = b[1], bb = b[2], ba = b[3];
+function lerpColor(a: number[], b: number[], amount: number) {
   return [
-    ar + amount * (br - ar),
-    ag + amount * (bg - ag),
-    ab + amount * (bb - ab),
-    aa + amount * (ba - aa)
+    a[0] + amount * (b[0] - a[0]),
+    a[1] + amount * (b[1] - a[1]),
+    a[2] + amount * (b[2] - a[2]),
+    a[3] + amount * (b[3] - a[3]),
   ];
 }
 
 export default function ScrollColorLayer() {
   const ref = useRef<HTMLDivElement>(null);
+  const currentColor = useRef([0, 20, 40, 0.18]);
 
   useEffect(() => {
     let animationFrameId: number;
-    
-    // RGBA colors
+
+    // RGBA waypoints
     const colors = {
-      hero: [0, 212, 255, 0.07],    // Cold cyan/blue
-      work: [0, 0, 0, 0],           // Neutral dark
-      cap: [123, 97, 255, 0.06],    // Warm purple/violet
-      footer: [255, 77, 0, 0.04]    // Warm amber glow
+      start: [0, 20, 40, 0.18], // deep ocean blue  — 0% scroll
+      mid1: [5, 5, 15, 0.18], // near black       — 30% scroll
+      mid2: [30, 0, 50, 0.18], // deep purple      — 60% scroll
+      end: [40, 15, 0, 0.18], // warm amber dark  — 100% scroll
     };
 
     const updateColor = () => {
       if (!ref.current) return;
+
       const scrollY = window.scrollY;
-      const vh = window.innerHeight;
-      
-      let currentColor = colors.hero;
-      
-      if (scrollY < vh) {
-        // Hero to Work (0 - 100vh)
-        const amt = scrollY / vh;
-        currentColor = lerpColor(colors.hero, colors.work, amt);
-      } else if (scrollY < vh * 2) {
-        // Work to Cap (100 - 200vh)
-        const amt = (scrollY - vh) / vh;
-        currentColor = lerpColor(colors.work, colors.cap, amt);
-      } else if (scrollY < vh * 3) {
-        // Cap to Footer (200 - 300vh)
-        const amt = (scrollY - vh * 2) / vh;
-        currentColor = lerpColor(colors.cap, colors.footer, amt);
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
+
+      let target: number[];
+      if (progress < 0.3) {
+        target = lerpColor(colors.start, colors.mid1, progress / 0.3);
+      } else if (progress < 0.6) {
+        target = lerpColor(colors.mid1, colors.mid2, (progress - 0.3) / 0.3);
       } else {
-        currentColor = colors.footer;
+        target = lerpColor(colors.mid2, colors.end, (progress - 0.6) / 0.4);
       }
-      
-      const [r, g, b, a] = currentColor;
-      ref.current.style.background = `radial-gradient(circle at 50% 50%, rgba(${r}, ${g}, ${b}, ${a}), transparent 70%)`;
-      
+
+      // Smooth lerp toward target
+      currentColor.current = lerpColor(currentColor.current, target, 0.05);
+
+      const [r, g, b, a] = currentColor.current;
+      ref.current.style.background = `radial-gradient(ellipse 80% 80% at 50% 50%, rgba(${r}, ${g}, ${b}, ${a}), transparent 70%)`;
+
       animationFrameId = requestAnimationFrame(updateColor);
     };
 
     animationFrameId = requestAnimationFrame(updateColor);
-
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
   return (
     <div
       ref={ref}
-      className="fixed inset-0 z-[1] pointer-events-none transition-colors duration-0"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 1,
+        pointerEvents: "none",
+        mixBlendMode: "screen",
+      }}
     />
   );
 }

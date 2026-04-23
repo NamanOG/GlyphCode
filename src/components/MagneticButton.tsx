@@ -23,12 +23,12 @@ export default function MagneticButton({ children, className = "", onClick, href
     const { width, height, left, top } = ref.current.getBoundingClientRect();
     const centerX = left + width / 2;
     const centerY = top + height / 2;
-    
+
     // Check if within 80px radius (we can just trigger on mouse enter for the whole element, but user specified within 80px of center)
     // Actually standard magnetic buttons trigger when hovering the element itself. Let's base it on element hover.
     const dx = clientX - centerX;
     const dy = clientY - centerY;
-    
+
     x.set(dx * 0.3);
     y.set(dy * 0.3);
   };
@@ -41,9 +41,6 @@ export default function MagneticButton({ children, className = "", onClick, href
 
   const handleMouseEnter = () => setIsHovered(true);
 
-  const Wrapper = href ? motion.a : motion.button;
-  const props = href ? { href } : { onClick };
-
   return (
     <motion.div
       ref={ref}
@@ -53,9 +50,15 @@ export default function MagneticButton({ children, className = "", onClick, href
       className={`relative inline-block ${className}`}
       style={{ x, y }}
     >
-      <Wrapper {...props as any} className="inline-block w-full h-full">
-        {children}
-      </Wrapper>
+      {href ? (
+        <motion.a href={href} className="inline-block w-full h-full">
+          {children}
+        </motion.a>
+      ) : (
+        <motion.button onClick={onClick} className="inline-block w-full h-full">
+          {children}
+        </motion.button>
+      )}
     </motion.div>
   );
 }

@@ -12,7 +12,9 @@
   --text-primary: #fafafa;
   --text-muted: #9aa3ae;
   --accent: #00d4ff;
-  --accent-warm: #ff4d00;
+  --accent-warm: #ff7a59;
+  --accent-pink: #ff6fb5;
+  --accent-green: #7af0b6;
   --background: 220 18% 6%;
   --foreground: 0 0% 98.04%;
   --muted: 220 18% 8%;
@@ -31,8 +33,9 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 18% 10%, rgba(0, 212, 255, 0.09), transparent 28%),
-    radial-gradient(circle at 82% 16%, rgba(0, 212, 255, 0.05), transparent 24%),
+    radial-gradient(circle at 16% 12%, rgba(0, 212, 255, 0.09), transparent 26%),
+    radial-gradient(circle at 86% 20%, rgba(0, 212, 255, 0.05), transparent 22%),
+    radial-gradient(circle at 50% 80%, rgba(255,122,89,0.03), transparent 10%),
     linear-gradient(180deg, #0b0d10 0%, #090a0c 54%, #0b0d10 100%);
   color: var(--text-primary);
   font-family: "Satoshi", sans-serif;
@@ -83,10 +86,95 @@ body::after {
   font-family: 'Satoshi', sans-serif;
 }
 
+.hero-headline {
+  letter-spacing: -0.02em;
+  text-shadow: 0 8px 24px rgba(2,6,12,0.6);
+}
+
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ─── Work card image preview ──────────────────────────────────────────────── */
+
+.work-card-preview {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center top;
+}
+
+.work-card-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* project image hover zoom */
+.group:hover .work-card-preview img {
+  transform: scale(1.06);
+  transition: transform 650ms cubic-bezier(0.2,0.8,0.2,1);
+}
+.work-card-preview img {
+  transition: transform 650ms cubic-bezier(0.2,0.8,0.2,1), filter 500ms ease;
+  will-change: transform;
+}
+
+/* floating decorative icons (replaces emoji accents) */
+.float-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  opacity: 0.95;
+  transform-origin: center center;
+  animation: floatY 6s ease-in-out infinite;
+  margin-right: 8px;
+  color: var(--accent);
+}
+.icon-1 { animation-duration: 6s; }
+.icon-2 { animation-duration: 7.2s; animation-delay: 0.2s; }
+.icon-3 { animation-duration: 5.6s; animation-delay: 0.5s; }
+
+@keyframes floatY {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-18px) rotate(6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* CTA icon spacing */
+.cta-icon { margin-right: 8px; display:inline-block }
+
+/* ─── Capability row hover states ───────────────────────────────────────────── */
+
+.capability-row {
+  transition: all 200ms ease;
+}
+
+.capability-row:hover .capability-label {
+  color: #00d4ff;
+}
+
+.capability-row .capability-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.capability-row:hover .capability-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── Section rhythm ────────────────────────────────────────────────────────── */
+
+section + section {
+  margin-top: 0;
 }

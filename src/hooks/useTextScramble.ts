@@ -14,14 +14,14 @@ export function useTextScramble(text: string, isActive: boolean = true) {
 
     let currentText = "";
     let iteration = 0;
-    let intervalId: NodeJS.Timeout;
+
 
     // We stagger by revealing characters over time.
     // Max iterations: text.length * multiple, to give a smooth hacker effect.
     // We update every 30ms.
     const maxIterations = text.length * 2;
 
-    intervalId = setInterval(() => {
+    const intervalId = window.setInterval(() => {
       currentText = text
         .split("")
         .map((letter, index) => {
