@@ -1,14 +1,29 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { useState } from "react";
+import CursorGlow from "./components/CursorGlow";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import LoadingScreen from "./components/LoadingScreen";
+import ScrollProgressBar from "./components/ScrollProgressBar";
 
-const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </BrowserRouter>
-);
+const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <>
+      <ScrollProgressBar />
+      <CursorGlow />
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+      <div className={loading ? "invisible" : "visible"}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </>
+  );
+};
 
 export default App;

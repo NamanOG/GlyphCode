@@ -1,161 +1,92 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@800,700,400&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 230 22% 6%;
-    --foreground: 220 22% 95%;
+:root {
+  --bg: #0b0d10;
+  --surface: #111318;
+  --border: #252c35;
+  --text-primary: #fafafa;
+  --text-muted: #9aa3ae;
+  --accent: #00d4ff;
+  --accent-warm: #ff4d00;
+  --background: 220 18% 6%;
+  --foreground: 0 0% 98.04%;
+  --muted: 220 18% 8%;
+  --muted-foreground: 215 14% 63%;
+}
 
-    --panel: 228 20% 10%;
-    --border: 228 18% 20%;
-    --muted: 226 18% 13%;
-    --muted-foreground: 220 14% 68%;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    --cyan: 188 95% 62%;
-    --cyan-subtle: 188 95% 62% / 0.18;
-    
-    --grid-line: 228 14% 16%;
-    --horizon-core: 24 98% 58%;
-    --horizon-accent: 195 96% 66%;
-    --space-glow: 266 72% 44%;
-  }
+html {
+  scroll-behavior: smooth;
+}
 
-  .dark {
-    --background: 230 22% 6%;
-    --foreground: 220 22% 95%;
+body {
+  background:
+    radial-gradient(circle at 18% 10%, rgba(0, 212, 255, 0.09), transparent 28%),
+    radial-gradient(circle at 82% 16%, rgba(0, 212, 255, 0.05), transparent 24%),
+    linear-gradient(180deg, #0b0d10 0%, #090a0c 54%, #0b0d10 100%);
+  color: var(--text-primary);
+  font-family: "Satoshi", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-width: 320px;
+}
 
-    --panel: 228 20% 10%;
-    --border: 228 18% 20%;
-    --muted: 226 18% 13%;
-    --muted-foreground: 220 14% 68%;
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
 
-    --cyan: 188 95% 62%;
-    --cyan-subtle: 188 95% 62% / 0.18;
+::selection {
+  background: rgba(0, 212, 255, 0.35);
+  color: var(--text-primary);
+}
 
-    --grid-line: 228 14% 16%;
-    --horizon-core: 24 98% 58%;
-    --horizon-accent: 195 96% 66%;
-    --space-glow: 266 72% 44%;
-  }
-
-  * {
-    @apply border-border;
-  }
-
+@media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
-  body {
-    @apply bg-background text-foreground font-sans antialiased transition-colors duration-700 ease-in-out;
-    font-feature-settings: "ss01", "cv11";
-    min-width: 320px;
-    text-rendering: geometricPrecision;
-  }
-
-  ::selection {
-    background: hsl(var(--cyan));
-    color: hsl(var(--background));
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      scroll-behavior: auto !important;
-      transition-duration: 0.01ms !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-@layer components {
-  .mono {
-    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    letter-spacing: 0.02em;
-  }
-
-  .display {
-    font-family: "Space Grotesk", "Manrope", system-ui, sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.045em;
-  }
-
-  .section-shell {
-    margin-inline: auto;
-    max-width: 1440px;
-    padding-inline: 1.25rem;
-  }
-
-  .technical-field {
-    background-image:
-      linear-gradient(to right, hsl(var(--grid-line)) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--grid-line)) 1px, transparent 1px);
-    background-position: top center;
-    background-size: 72px 72px;
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
-    opacity: 0.8;
-    pointer-events: none;
-    transition: background-image 0.7s ease-in-out;
-  }
-
-  .cosmic-stars {
-    background-image:
-      radial-gradient(circle at 12% 18%, hsl(var(--foreground) / 0.36) 0 1px, transparent 1.5px),
-      radial-gradient(circle at 80% 24%, hsl(var(--foreground) / 0.26) 0 1px, transparent 1.5px),
-      radial-gradient(circle at 54% 80%, hsl(var(--foreground) / 0.22) 0 1px, transparent 1.5px),
-      radial-gradient(circle at 30% 68%, hsl(var(--foreground) / 0.2) 0 1px, transparent 1.5px);
-    background-size: 180px 180px, 240px 240px, 210px 210px, 260px 260px;
-    mix-blend-mode: screen;
-    opacity: 0.42;
-    pointer-events: none;
-  }
-
-  .event-horizon-core {
-    background:
-      radial-gradient(circle at center, transparent 0 12%, hsl(0 0% 2% / 0.96) 18%, hsl(0 0% 0%) 34%),
-      radial-gradient(circle at center, hsl(var(--horizon-core) / 0.38), transparent 66%);
-    filter: blur(0.3px) saturate(1.1);
-    pointer-events: none;
-  }
-
-  .event-horizon-ring {
-    border-radius: 9999px;
-    border: 1px solid hsl(var(--horizon-accent) / 0.32);
-    box-shadow:
-      0 0 40px hsl(var(--horizon-core) / 0.2),
-      inset 0 0 26px hsl(var(--horizon-core) / 0.16);
-    background:
-      conic-gradient(
-        from 0deg,
-        hsl(var(--horizon-core) / 0.02) 0deg,
-        hsl(var(--horizon-core) / 0.48) 80deg,
-        hsl(var(--horizon-accent) / 0.42) 190deg,
-        hsl(var(--horizon-core) / 0.12) 290deg,
-        hsl(var(--horizon-core) / 0.02) 360deg
-      );
-    filter: blur(1px) saturate(1.25);
-    pointer-events: none;
-  }
-
-  .event-horizon-vignette {
-    background:
-      radial-gradient(circle at 58% 46%, transparent 0%, hsl(var(--space-glow) / 0.08) 38%, hsl(0 0% 0% / 0.72) 100%),
-      linear-gradient(to bottom, hsl(0 0% 0% / 0.2), hsl(0 0% 0% / 0.52));
-    pointer-events: none;
-  }
+.font-courier {
+  font-family: 'Courier New', monospace;
 }
 
-@media (min-width: 768px) {
-  .section-shell {
-    padding-inline: 2.25rem;
-  }
+.font-cabinet {
+  font-family: 'Cabinet Grotesk', sans-serif;
 }
 
+.font-satoshi {
+  font-family: 'Satoshi', sans-serif;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
