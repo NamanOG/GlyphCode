@@ -611,7 +611,7 @@ function ProjectCard({
 
 function SelectedWork() {
   return (
-    <section className="section-shell pt-16 md:pt-24 lg:pt-28" id="work">
+    <section className="section-shell pt-16 pb-16 md:pt-24 md:pb-24 lg:pt-28 lg:pb-28" id="work">
       <SectionHeader
         eyebrow="Selected Work"
         index="INDEX 24_26"
@@ -637,7 +637,7 @@ function SelectedWork() {
 
 function Capabilities() {
   return (
-    <section className="section-shell pt-16 md:pt-24 lg:pt-28" id="capabilities">
+    <section className="section-shell pt-16 pb-16 md:pt-24 md:pb-24 lg:pt-28 lg:pb-28" id="capabilities">
       <SectionHeader
         eyebrow="Capabilities"
         index="SYSTEMS"
@@ -677,7 +677,7 @@ function Capabilities() {
 
 function Process() {
   return (
-    <section className="section-shell pt-16 md:pt-24 lg:pt-28" id="process">
+    <section className="section-shell pt-16 pb-16 md:pt-24 md:pb-24 lg:pt-28 lg:pb-28" id="process">
       <SectionHeader
         eyebrow="Process"
         index="SEQUENCE"
@@ -716,8 +716,8 @@ function Process() {
 
 function Philosophy() {
   return (
-    <section className="border-y border-border bg-panel pt-16 md:pt-24 lg:pt-28" id="about">
-      <div className="mx-auto grid max-w-[1440px] grid-cols-12 gap-8 px-5 pb-16 md:px-9 md:pb-24 lg:pb-28">
+    <section className="border-y border-border bg-panel py-16 md:py-24 lg:py-28" id="about">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-12 gap-8 px-5 md:px-9">
         <Reveal className="col-span-12 md:col-span-3" variants={clipLeft}>
           <div className="mono text-[0.7rem] uppercase tracking-[0.24em] text-cyan">PHILOSOPHY</div>
           <div className="mt-6 h-px w-16 bg-foreground/20" />
@@ -746,7 +746,7 @@ function Contact() {
   ];
 
   return (
-    <section className="section-shell pt-16 md:pt-24 lg:pt-28" id="contact">
+    <section className="section-shell pt-16 pb-16 md:pt-24 md:pb-24 lg:pt-28 lg:pb-28" id="contact">
       <SectionHeader eyebrow="Contact" index="INITIATE" title="Establish connection." />
 
       <div className="mt-12 grid grid-cols-12 gap-10">
